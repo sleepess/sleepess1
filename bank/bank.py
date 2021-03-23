@@ -31,55 +31,29 @@ class Bank:
         return 1
 
     def bank_gmoney(self):
-        account = input("请输入您的ID")
-        sql = "select ye from q where id = %s"
-        date = select(sql,account)
-        if date == None:
-            print("未找到")
+        account = input("请输入您的账号：")
+        passwd = input("请输入您的密码:")
+        sql = "select *  from  q  where  id = %s and pass  = %s"
+        date = select(sql,[account,passwd])
+        if date == ():
+            print("输入信息错误")
+            return 1
         else:
-            print("您的余额为",date[0][0])
-            money = input("请输入您提取的金额：")
+            sql = "select ye from q where id = %s"
+            date = select(sql,account)
+            print(date[0][0])
+            money = input("请输入修改金额：")
             sql = "update q set ye = ye - %s"
             update(sql,money)
             sql = "select ye from q where id = %s"
-            date = select(sql, account)
-            print(date[0][0])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            date = select(sql,account)
+            if date[0][0] < 0:
+                print("您的余额不足")
+                sql = "update q set ye = ye + %s"
+                update(sql,money)
+                sql = "select ye from q where id = %s"
+                print(select(sql,account)[0][0])
+            else:
+                sql = "select ye from q where account = %s"
+                print(select(sql,account))
 
